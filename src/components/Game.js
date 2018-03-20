@@ -64,14 +64,14 @@ export default class Game extends React.Component {
 
       let liComponent = (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button class="nav-button" onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
 
       if(move === this.state.stepNumber){
         liComponent = (
           <li key={move}>
-            <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
+            <button class="nav-button" onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
           </li>
         );
       }
@@ -83,6 +83,8 @@ export default class Game extends React.Component {
     let status;
     if(winner)
       status = 'Winner: ' + winner;
+    else if(isDraw(current.squares))
+      status = 'It\'s a draw';
     else
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
@@ -97,9 +99,9 @@ export default class Game extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <ol>{moves}</ol>
-        </div>
-        <div>
-          <button className="sort-moves" onClick={() => this.sortMoveButtons()}>Sort</button>
+          <div>
+            <button className="sort-moves" onClick={() => this.sortMoveButtons()}>Sort</button>
+          </div>
         </div>
       </div>
     );
@@ -124,4 +126,11 @@ function calculateWinner(squares){
     }
   }
   return winner;
+}
+
+function isDraw(squares){
+  let isDraw = false;
+  if(squares.filter(square => square.value === null).length === 0)
+    isDraw = true;
+  return isDraw;
 }
