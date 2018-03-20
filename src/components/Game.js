@@ -13,7 +13,8 @@ export default class Game extends React.Component {
         }
       }],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      ascOrder: true
     }
   }
 
@@ -39,6 +40,11 @@ export default class Game extends React.Component {
       });
     }
   }
+  sortMoveButtons(){
+    this.setState({
+      ascOrder: !this.state.ascOrder
+    })
+  }
   jumpTo(step){
     this.setState({
       stepNumber: step,
@@ -50,19 +56,19 @@ export default class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
+    let moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move + '(' + history[move].position.col + ',' + history[move].position.row + ')':
         'Go to game start';
 
-         
-       let liComponent = (
+
+      let liComponent = (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
 
-      if(move == this.state.stepNumber){
+      if(move === this.state.stepNumber){
         liComponent = (
           <li key={move}>
             <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
@@ -71,7 +77,8 @@ export default class Game extends React.Component {
       }
       return liComponent;
     });
-
+    if(!this.state.ascOrder)
+      moves = moves.reverse();
 
     let status;
     if(winner)
@@ -82,7 +89,7 @@ export default class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board 
+          <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
@@ -90,6 +97,9 @@ export default class Game extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <ol>{moves}</ol>
+        </div>
+        <div>
+          <button className="sort-moves" onClick={() => this.sortMoveButtons()}>Sort</button>
         </div>
       </div>
     );
