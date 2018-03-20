@@ -4,45 +4,49 @@ export default class Board extends React.Component {
 
     renderSquare(i) {
         return (
-        <Square 
-            value={this.props.squares[i]} 
+        <Square
+            value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />
         );
     }
 
     render() {
-        let rows = 3;
-        let cols = 3;
-        let boardContent = [];
-        for(let i = 0; i < rows; i++){
-            for(let j = 0; j < cols; j++){
+        const boardArray = createArray(3,3);
 
-            }
-        }
-
+        const rows = boardArray.map((cols, index) => {
+            const row = cols.map((col) => {
+                return (
+                    <span key={col}>{this.renderSquare(col)}</span>
+                );
+            });
+            const boardRow = (
+                <div className="board-row" key={index}>
+                    {row}
+                </div>
+            );
+            return boardRow;
+        });
         return (
-        <div>
-            <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
+            <div>
+                {rows}
             </div>
-            <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-            </div>
-            <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-            </div>
-        </div>
         );
     }
 }
 
+
+function createArray(width, height){
+    let rows = [];
+    for(let i = 0; i < height; i++){
+        let cols = [];
+        for(let j = 0; j < width; j++){
+            cols.push(j + 3 * i);
+        }
+        rows.push(cols);
+    }
+    return rows;
+}
 
 function Square(props){
     return (
@@ -51,4 +55,3 @@ function Square(props){
         </button>
     );
 }
-  
