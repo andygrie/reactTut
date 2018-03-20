@@ -6,7 +6,7 @@ export default class Game extends React.Component {
     super(props);
     this.state = {
       history : [{
-        squares: Array(9).fill(null),
+        squares: Array(9).fill().map(square => ({winner: false, value: null})),
         position: {
           col : -1,
           row : -1,
@@ -22,8 +22,8 @@ export default class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if(!calculateWinner(squares) && !squares[i]){
-      squares[i] = this.state.xIsNext ? 'X' : 'O';
+    if(!calculateWinner(squares) && !squares[i].value){
+      squares[i] = this.state.xIsNext ? {winner: false,value: 'X'} : {winner: false,value: 'O'};
       let position = {
         col : 0,
         row : -1
@@ -117,10 +117,10 @@ function calculateWinner(squares){
     [2, 4, 6]
   ];
   let winner = null;
-  for(let i = 0; i < lines.length; i++){
+  for(let i = 0; i < lines.length && winner == null; i++){
     const [a, b, c] = lines[i];
-    if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
-      winner = squares[a];
+    if(squares[a].value && squares[a].value === squares[b].value && squares[a].value === squares[c].value){
+      winner = squares[a].value;
     }
   }
   return winner;
